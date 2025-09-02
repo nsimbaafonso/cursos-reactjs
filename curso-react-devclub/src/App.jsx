@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import reactLogo from "./assets/react.svg";
+import { v4 } from "uuid";
 import "./App.css";
 
 function App() {
@@ -7,7 +7,12 @@ function App() {
   const inputRef = useRef();
 
   function CliqueiNoBotao() {
-    setProdutos([inputRef.current.value, ...produtos]);
+    setProdutos([{id: v4(), nome: inputRef.current.value}, ...produtos]);
+    inputRef.current.value = ""
+  }
+
+  function deletarProduto(id) {
+    setProdutos(produtos.filter(produto => produto.id !== id))
   }
 
   return (
@@ -26,12 +31,12 @@ function App() {
         </div>
 
         {/* Lista de produtos */}
-        {
-          produtos.map(produto => {
-            return <div>{produto}</div>;
-          })
-        }
-        
+        {produtos.map((produto) => {
+          return <div key={produto.id}  className="flex items-center justify-between bg-white shadow-md rounded-lg p-4 mt-2 mb-2 hover:shadow-lg transition">
+            <p className="text-gray-800 font-medium">{produto.nome}</p>
+            <button onClick={() => deletarProduto(produto.id)} className="text-red-500 hover:text-red-700 transition">❌</button>
+          </div>;
+        })}
       </div>
     </div>
   );
